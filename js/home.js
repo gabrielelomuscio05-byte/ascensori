@@ -1,6 +1,5 @@
 /* ============================================================
-   DCN Ascensori — home.js
-   Gestione scroll video background (Veldara style), particelle,
+   Vertiqal Systems — home.js
    dissolvenze hero e card fisse con maschere di scorrimento.
    ============================================================ */
 (function () {

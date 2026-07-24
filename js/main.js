@@ -1,5 +1,5 @@
 /* ============================================================
-   DCN Ascensori — main.js
+   Vertiqal Systems — main.js
    Comportamenti condivisi: nav, reveal on scroll, contatori
    ============================================================ */
 (function () {
@@ -144,7 +144,7 @@
   /* ---------- Cookie banner ---------- */
   const cookieBanner = document.getElementById('cookie-banner');
 
-  if (cookieBanner && !localStorage.getItem('dcn-cookie-consent')) {
+  if (cookieBanner && !localStorage.getItem('vertiqal-cookie-consent')) {
     // Mostra il banner (ha l'animazione CSS slide-up automatica)
     cookieBanner.style.display = '';
 
@@ -152,7 +152,7 @@
     const rejectBtn = document.getElementById('cookie-reject');
 
     function dismissCookie(choice) {
-      localStorage.setItem('dcn-cookie-consent', choice);
+      localStorage.setItem('vertiqal-cookie-consent', choice);
       cookieBanner.classList.add('is-hidden');
       setTimeout(() => { cookieBanner.remove(); }, 500);
     }

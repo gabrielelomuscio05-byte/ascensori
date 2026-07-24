@@ -1,4 +1,4 @@
-# DCN Ascensori — Sito web
+# Vertiqal Systems — Sito web
 
 Sito vetrina per azienda di ascensori: home con esperienza scroll-driven e sfondo 3D (vano ascensore in Three.js), quattro pagine interne, design dark premium con accento oro.
 

@@ -1,6 +1,6 @@
 /* ============================================================
-   DCN Ascensori — form.js
-   Validazione lato client del form contatti / preventivo
+   Vertiqal Systems — form.js
+   Validazione client-side del modulo contatti
    ============================================================ */
 (function () {
   'use strict';
