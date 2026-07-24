@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contatti — DCN Ascensori</title>
+  <meta name="description" content="Richiedi un preventivo gratuito o contatta l'assistenza DCN Ascensori. Rispondiamo entro 24 ore lavorative. Emergenze 24/7." />
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+</head>
+<body>
+
+  <div class="page-loader" id="page-loader" aria-hidden="true"><div class="loader-spinner"></div></div>
+
+  <header>
+    <nav class="site-nav" aria-label="Principale">
+      <div class="container">
+        <a class="brand" href="../index.html" aria-label="DCN Ascensori — home">
+          <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <rect x="4" y="2" width="40" height="44" rx="6" stroke="var(--accent)" stroke-width="3"/>
+            <path d="M17 20l7-8 7 8" stroke="var(--text)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M31 28l-7 8-7-8" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          DCN <span class="brand-suffix">Ascensori</span>
+        </a>
+        <ul class="nav-links" id="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="prodotti.html">Prodotti</a></li>
+          <li><a href="servizi.html">Servizi</a></li>
+          <li><a href="azienda.html">Azienda</a></li>
+          <li><a href="elevator-3d.html">Simulatore 3D</a></li>
+          <li><a href="contatti.html" aria-current="page">Contatti</a></li>
+        </ul>
+        <a href="contatti.html" class="btn btn-primary btn-sm nav-cta">Richiedi preventivo</a>
+        <button class="nav-toggle" aria-label="Apri menu" aria-expanded="false" aria-controls="nav-links">
+          <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <span class="eyebrow reveal">Contatti</span>
+        <h1 class="reveal">Parliamo del tuo progetto.</h1>
+        <p class="section-lead reveal">Preventivi e sopralluoghi sono sempre gratuiti. Rispondiamo entro 24 ore lavorative.</p>
+      </div>
+    </section>
+
+    <section class="section" aria-label="Modulo di contatto e recapiti">
+      <div class="container">
+        <div class="contact-layout">
+
+          <!-- Form -->
+          <div class="reveal">
+            <h2 class="section-title" style="margin-top:0;">Richiedi un preventivo</h2>
+            <form id="contact-form" novalidate>
+              <div class="form-grid">
+                <div class="form-field">
+                  <label for="f-nome">Nome e cognome <span class="required" aria-hidden="true">*</span></label>
+                  <input type="text" id="f-nome" name="nome" autocomplete="name" required />
+                  <span class="form-error" data-error-for="nome" aria-live="polite"></span>
+                </div>
+                <div class="form-field">
+                  <label for="f-email">Email <span class="required" aria-hidden="true">*</span></label>
+                  <input type="email" id="f-email" name="email" autocomplete="email" required />
+                  <span class="form-error" data-error-for="email" aria-live="polite"></span>
+                </div>
+                <div class="form-field">
+                  <label for="f-telefono">Telefono</label>
+                  <input type="tel" id="f-telefono" name="telefono" autocomplete="tel" />
+                  <span class="form-error" data-error-for="telefono" aria-live="polite"></span>
+                </div>
+                <div class="form-field">
+                  <label for="f-tipo">Tipo di richiesta</label>
+                  <select id="f-tipo" name="tipo">
+                    <option value="installazione">Nuova installazione</option>
+                    <option value="manutenzione">Contratto di manutenzione</option>
+                    <option value="modernizzazione">Modernizzazione</option>
+                    <option value="altro">Altro</option>
+                  </select>
+                </div>
+                <div class="form-field full">
+                  <label for="f-messaggio">Messaggio <span class="required" aria-hidden="true">*</span></label>
+                  <textarea id="f-messaggio" name="messaggio" required placeholder="Descrivi l'edificio (piani, uso, impianto esistente) e la tua esigenza…"></textarea>
+                  <span class="form-error" data-error-for="messaggio" aria-live="polite"></span>
+                </div>
+                <div class="form-field full">
+                  <button type="submit" class="btn btn-primary">Invia richiesta</button>
+                </div>
+              </div>
+              <div class="form-success" id="form-success" tabindex="-1" role="status">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+                <span><strong>Richiesta inviata.</strong> Ti ricontatteremo entro 24 ore lavorative all'indirizzo indicato.</span>
+              </div>
+            </form>
+          </div>
+
+          <!-- Recapiti -->
+          <aside>
+            <h2 class="section-title reveal" style="margin-top:0;font-size:1.5rem;">Recapiti diretti</h2>
+            <ul class="contact-info-list">
+              <li class="reveal">
+                <span class="card-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </span>
+                <div>
+                  <strong>Sede principale</strong>
+                  <span>Via dell'Industria 42, 20090 Milano (MI)<br />Lun–Ven 8:30–18:00</span>
+                </div>
+              </li>
+              <li class="reveal" data-reveal-delay="1">
+                <span class="card-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </span>
+                <div>
+                  <strong>Telefono</strong>
+                  <span><a href="tel:+390212345678">+39 02 1234 5678</a> — commerciale<br /><a href="tel:+390287654321">+39 02 8765 4321</a> — assistenza</span>
+                </div>
+              </li>
+              <li class="reveal" data-reveal-delay="2">
+                <span class="card-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg>
+                </span>
+                <div>
+                  <strong>Email</strong>
+                  <span><a href="mailto:info@dcnascensori.it">info@dcnascensori.it</a><br /><a href="mailto:assistenza@dcnascensori.it">assistenza@dcnascensori.it</a></span>
+                </div>
+              </li>
+            </ul>
+
+            <div class="emergency-banner reveal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+              <div>
+                <strong>Persona bloccata in cabina?</strong>
+                <p>Numero verde emergenze attivo 24/7: <a href="tel:800123456" style="color:var(--accent-bright);font-weight:600;">800 123 456</a></p>
+              </div>
+            </div>
+          </aside>
+
+        </div>
+
+        <!-- Mappa -->
+        <div class="map-container reveal">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2796.3!2d9.18!3d45.47!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDXCsDI4JzEyLjAiTiA5wrAxMCw0OC4wIkU!5e0!3m2!1sit!2sit!4v1" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa sede DCN Ascensori"></iframe>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <a class="brand" href="../index.html">
+            <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <rect x="4" y="2" width="40" height="44" rx="6" stroke="var(--accent)" stroke-width="3"/>
+              <path d="M17 20l7-8 7 8" stroke="var(--text)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M31 28l-7 8-7-8" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            DCN <span class="brand-suffix">Ascensori</span>
+          </a>
+          <p>Progettiamo, installiamo e manteniamo sistemi di elevazione dal 1991. Sicurezza, silenziosità, design.</p>
+        </div>
+        <div>
+          <h4>Azienda</h4>
+          <ul>
+            <li><a href="azienda.html">Chi siamo</a></li>
+            <li><a href="prodotti.html">Prodotti</a></li>
+            <li><a href="servizi.html">Servizi</a></li>
+            <li><a href="elevator-3d.html">Simulatore 3D</a></li>
+            <li><a href="contatti.html">Contatti</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Servizi</h4>
+          <ul>
+            <li><a href="servizi.html#installazione">Installazione</a></li>
+            <li><a href="servizi.html#manutenzione">Manutenzione</a></li>
+            <li><a href="servizi.html#modernizzazione">Modernizzazione</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contatti</h4>
+          <ul class="footer-contact">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Via dell'Industria 42, 20090 Milano (MI)
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              +39 02 1234 5678
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg>
+              info@dcnascensori.it
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; <span id="current-year">2026</span> DCN Ascensori S.r.l. — P.IVA 01234567890</span>
+        <span>Privacy · Cookie · Certificazioni ISO 9001</span>
+      </div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" id="scroll-top" aria-label="Torna in cima">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
+  <a class="floating-contact" href="https://wa.me/390212345678?text=Salve%2C%20vorrei%20informazioni%20sui%20vostri%20ascensori." target="_blank" rel="noopener noreferrer" aria-label="Contattaci su WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+  <div class="cookie-banner" id="cookie-banner" role="dialog" aria-label="Consenso cookie">
+    <div class="cookie-text"><p>Questo sito utilizza cookie tecnici e, previo consenso, cookie di profilazione per migliorare la tua esperienza.</p></div>
+    <div class="cookie-actions">
+      <button class="btn btn-ghost btn-sm" id="cookie-reject">Solo necessari</button>
+      <button class="btn btn-primary btn-sm" id="cookie-accept">Accetta tutti</button>
+    </div>
+  </div>
+
+  <script src="../js/main.js" defer></script>
+  <script src="../js/form.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+/* ============================================================
+   DCN Ascensori — pages.css
+   Pagine interne: hero compatto, griglie, timeline, contatti
+   ============================================================ */
+
+/* ---------- Hero pagina ---------- */
+
+.page-hero {
+  position: relative;
+  padding-top: calc(var(--nav-height) + clamp(3.5rem, 9vw, 6.5rem));
+  padding-bottom: clamp(3rem, 7vw, 5rem);
+  background:
+    radial-gradient(90% 120% at 80% -20%, rgba(212, 163, 25, 0.08) 0%, transparent 60%),
+    radial-gradient(120% 90% at 50% 0%, #141418 0%, var(--bg) 75%);
+  border-bottom: 1px solid var(--border);
+}
+
+.page-hero h1 {
+  font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+  margin-top: 1rem;
+  max-width: 22ch;
+}
+
+.page-hero .section-lead {
+  margin-top: 1.2rem;
+  max-width: 56ch;
+}
+
+/* ---------- Griglia prodotti ---------- */
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.75rem;
+}
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+}
+
+.product-visual {
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(160deg, rgba(212, 163, 25, 0.08), transparent 55%),
+    var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  color: var(--accent-bright);
+}
+
+.product-visual svg {
+  width: 5rem;
+  height: 5rem;
+  opacity: 0.9;
+}
+
+.product-body {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.product-body h3 { font-size: 1.35rem; }
+
+.product-tag {
+  align-self: flex-start;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-bright);
+  background: var(--accent-dim);
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.spec-list {
+  list-style: none;
+  margin-top: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+}
+
+.spec-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px dashed var(--border);
+  padding-bottom: 0.55rem;
+}
+
+.spec-list li span:last-child {
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  text-align: right;
+}
+
+/* ---------- Timeline processo ---------- */
+
+.timeline {
+  list-style: none;
+  position: relative;
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  padding-left: 3rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 1.05rem;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--accent), var(--border));
+}
+
+.timeline li { position: relative; }
+
+.timeline .step-num {
+  position: absolute;
+  left: -3rem;
+  top: 0;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  color: var(--accent-bright);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.timeline h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.timeline p {
+  color: var(--text-muted);
+  font-size: 0.9875rem;
+}
+
+/* ---------- Piani manutenzione ---------- */
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+  margin-top: 3rem;
+  align-items: stretch;
+}
+
+.plan-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.plan-card.featured {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 24px 60px rgba(212, 163, 25, 0.1);
+}
+
+.plan-card .plan-name {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.plan-card .plan-desc {
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+  margin-top: 0.5rem;
+}
+
+.plan-features {
+  list-style: none;
+  margin-block: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  flex: 1;
+}
+
+.plan-features li {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+}
+
+.plan-features svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+  color: var(--accent-bright);
+}
+
+/* ---------- Valori azienda ---------- */
+
+/* Stats (shared across pages) */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  text-align: center;
+}
+
+.stat-value {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 700;
+  color: var(--text);
+}
+
+.stat-value .suffix { color: var(--accent-bright); }
+
+.stat-label {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.4rem;
+}
+
+/* Solid panel */
+.solid-panel {
+  position: relative;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+}
+
+/* CTA band */
+.cta-band {
+  text-align: center;
+  padding-block: clamp(4.5rem, 10vw, 7rem);
+}
+
+.cta-band h2 {
+  font-size: clamp(1.9rem, 4.5vw, 3rem);
+  max-width: 40rem;
+  margin-inline: auto;
+}
+
+.cta-band p {
+  color: var(--text-muted);
+  margin: 1.2rem auto 2.2rem;
+  font-size: 1.125rem;
+}
+
+/* Logo strip */
+.logo-strip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(2rem, 6vw, 4.5rem);
+  flex-wrap: wrap;
+  opacity: 0.55;
+}
+
+.logo-strip span {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+  margin-top: 3rem;
+}
+
+.history-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.history-block .stats-grid {
+  grid-template-columns: repeat(2, 1fr);
+  text-align: left;
+  gap: 2.5rem;
+}
+
+/* ---------- Contatti ---------- */
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.contact-info-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 2.25rem;
+}
+
+.contact-info-list li {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.contact-info-list .card-icon {
+  margin-bottom: 0;
+  flex-shrink: 0;
+  width: 2.6rem;
+  height: 2.6rem;
+}
+
+.contact-info-list strong {
+  font-family: var(--font-display);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.15rem;
+}
+
+.contact-info-list span {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.emergency-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--accent-dim);
+  border: 1px solid rgba(212, 163, 25, 0.35);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.emergency-banner svg {
+  width: 1.6rem;
+  height: 1.6rem;
+  color: var(--accent-bright);
+  flex-shrink: 0;
+}
+
+.emergency-banner strong { font-family: var(--font-display); }
+
+.emergency-banner p {
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+  .products-grid,
+  .plans-grid,
+  .values-grid { grid-template-columns: 1fr; }
+
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .history-block,
+  .contact-layout { grid-template-columns: 1fr; }
+}

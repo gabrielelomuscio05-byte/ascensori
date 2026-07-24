@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulatore 3D — DCN</title>
+  <meta name="description" content="Esplora il simulatore 3D dell'ascensore DCN. Interagisci con la cabina, seleziona i piani e osserva i componenti meccanici in tempo reale." />
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Source+Sans+3:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/pages.css" />
+
+  <style>
+    /* Stili specifici per il simulatore 3D */
+    .simulator-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      height: 100svh;
+      overflow: hidden;
+      background: #060913;
+    }
+
+    #webgl-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      outline: none;
+      z-index: 1;
+    }
+
+    /* Overlay Pannello di Controllo Ascensore (COP) */
+    .cop-panel {
+      position: absolute;
+      top: 50%;
+      left: 4vw;
+      transform: translateY(-50%);
+      width: 320px;
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border: 3px solid rgba(148, 163, 184, 0.2);
+      border-radius: 16px;
+      padding: 1.75rem;
+      z-index: 10;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 
+                  inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .cop-header {
+      text-align: center;
+      border-bottom: 2px solid rgba(148, 163, 184, 0.1);
+      padding-bottom: 1rem;
+    }
+
+    .cop-header h2 {
+      font-size: 1.25rem;
+      color: var(--text);
+      letter-spacing: 0.05em;
+      margin: 0;
+    }
+
+    .cop-header p {
+      font-size: 0.75rem;
+      color: var(--accent-bright);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin: 0.2rem 0 0;
+      font-weight: 600;
+    }
+
+    /* Display LED del piano */
+    .cop-display {
+      background: #04060a;
+      border: 2px solid rgba(197, 155, 39, 0.3);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.9), 0 0 10px rgba(197, 155, 39, 0.1);
+    }
+
+    .display-screen {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 2.25rem;
+      color: #e5c158;
+      text-shadow: 0 0 10px rgba(229, 193, 88, 0.8);
+      line-height: 1;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .display-screen span {
+      display: inline-block;
+    }
+
+    .display-arrow {
+      font-size: 1.5rem;
+      opacity: 0.2;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+
+    .display-arrow.active {
+      color: #e5c158;
+      opacity: 1;
+      text-shadow: 0 0 10px rgba(229, 193, 88, 0.8);
+      animation: flash 1s infinite alternate;
+    }
+
+    @keyframes flash {
+      0% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+
+    .display-status {
+      font-size: 0.75rem;
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      text-align: right;
+    }
+
+    /* Pulsantiera */
+    .cop-keypad {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      justify-items: center;
+      padding: 0.5rem 0;
+    }
+
+    .cop-btn {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #334155, #1e293b);
+      border: 3px solid #475569;
+      color: var(--text);
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3), inset 0 2px 2px rgba(255,255,255,0.1);
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+    }
+
+    .cop-btn::after {
+      content: '';
+      position: absolute;
+      inset: 2px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .cop-btn:hover {
+      border-color: #64748b;
+      transform: translateY(-2px);
+    }
+
+    .cop-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .cop-btn.active {
+      background: linear-gradient(135deg, #0f172a, #0b1329);
+      border-color: var(--accent);
+      color: var(--accent-bright);
+      text-shadow: 0 0 10px rgba(229, 193, 88, 0.8);
+      box-shadow: 0 0 15px rgba(197, 155, 39, 0.4), inset 0 0 8px rgba(197, 155, 39, 0.2);
+    }
+
+
+
+    /* Controlli Vista 3D */
+    .view-controls {
+      position: absolute;
+      top: 5vh;
+      right: 4vw;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      z-index: 10;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      display: flex;
+      gap: 0.5rem;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .view-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .view-btn.active {
+      background: var(--accent);
+      color: var(--accent-contrast);
+      font-weight: 600;
+    }
+
+    .view-btn:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+    }
+
+    /* Istruzioni HUD */
+    .simulator-hud {
+      position: absolute;
+      bottom: 5vh;
+      right: 4vw;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.1);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      z-index: 10;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .hud-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .hud-item svg {
+      width: 18px;
+      height: 18px;
+      color: var(--accent-bright);
+    }
+
+    /* Pulsante Indietro */
+    .back-nav {
+      position: absolute;
+      top: 5vh;
+      left: 4vw;
+      z-index: 10;
+    }
+
+    .btn-back {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .btn-back:hover {
+      border-color: var(--accent-bright);
+      color: var(--accent-bright);
+      transform: translateX(-4px);
+    }
+
+    /* Messaggio audio attivo */
+
+
+    /* Adattabilità mobile */
+    @media (max-width: 768px) {
+      .cop-panel {
+        bottom: 4vh;
+        top: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90vw;
+        max-width: 380px;
+        flex-direction: row;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        gap: 0.75rem;
+        border-radius: 12px;
+      }
+
+      .cop-header {
+        display: none;
+      }
+
+      .cop-display {
+        flex: 1;
+        padding: 0.4rem 0.6rem;
+      }
+
+      .display-screen {
+        font-size: 1.5rem;
+      }
+
+      .display-status {
+        font-size: 0.65rem;
+      }
+
+      .cop-keypad {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.4rem;
+        padding: 0;
+        flex: 2;
+      }
+
+      .cop-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+        border-width: 2px;
+      }
+
+
+
+      .view-controls {
+        top: auto;
+        bottom: 18vh;
+        left: 5vw;
+        right: 5vw;
+        justify-content: center;
+        padding: 0.5rem;
+      }
+
+      .view-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
+      }
+
+      .simulator-hud {
+        display: none;
+      }
+
+
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-loader" id="page-loader" aria-hidden="true">
+    <div class="loader-spinner"></div>
+  </div>
+
+  <div class="simulator-container">
+    <!-- Canvas WebGL per Three.js -->
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- Navigazione Indietro -->
+    <div class="back-nav">
+      <a href="../index.html" class="btn-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Torna al sito
+      </a>
+    </div>
+
+    <!-- Selettori di Vista Camera -->
+    <div class="view-controls">
+      <button class="view-btn active" id="view-orbit" data-view="orbit">Camera Libera</button>
+      <button class="view-btn" id="view-cabin" data-view="cabin">Interno Cabina</button>
+    </div>
+
+    <!-- HUD Istruzioni -->
+    <div class="simulator-hud">
+      <div class="hud-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+        <span>Trascina per ruotare la camera</span>
+      </div>
+      <div class="hud-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+        <span>Usa la rotella per lo zoom</span>
+      </div>
+    </div>
+
+
+
+    <!-- COP (Car Operating Panel) Overlay -->
+    <div class="cop-panel">
+      <div class="cop-header">
+        <h2>DCN</h2>
+        <p>3D Simulator Prototipo</p>
+      </div>
+
+      <!-- Display LED di stato -->
+      <div class="cop-display">
+        <div class="display-screen">
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+            <span class="display-arrow" id="arrow-up">▲</span>
+            <span class="display-arrow" id="arrow-down">▼</span>
+          </div>
+          <span id="floor-indicator">0</span>
+        </div>
+        <div class="display-status">
+          <div style="color: #64748b; font-size: 0.65rem;">Stato vano</div>
+          <div id="door-status" style="color: #f8fafc; font-weight: bold;">Chiuso</div>
+        </div>
+      </div>
+
+      <!-- Pulsanti piani -->
+      <div class="cop-keypad">
+        <button class="cop-btn" data-floor="2">2</button>
+        <button class="cop-btn" data-floor="1">1</button>
+        <button class="cop-btn active" data-floor="0">T</button>
+      </div>
+
+
+    </div>
+  </div>
+
+  <!-- CDN Imports per Three.js e OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <script>
+    /* ============================================================
+       DCN Ascensori — elevator-3d.html
+       Simulatore 3D dell'ascensore DCN
+       Progettazione meccanica realistica, audio sintetico Web Audio
+       ============================================================ */
+
+    (function() {
+      'use strict';
+
+      // Rimuovi loader al caricamento
+      window.addEventListener('load', () => {
+        const loader = document.getElementById('page-loader');
+        if (loader) {
+          loader.classList.add('is-loaded');
+          setTimeout(() => loader.remove(), 600);
+        }
+      });
+
+      // ===================== COORD E CONFIG =====================
+      const FLOOR_HEIGHTS = [0, 5, 10]; // Y coords per i piani T, 1, 2
+      const FLOOR_LABELS = ['T', '1', '2'];
+      const TOTAL_HEIGHT = 12.5;
+
+      let currentFloor = 0;
+      let targetFloor = 0;
+      let cabinY = 0;
+      let velocity = 0;
+      const MAX_SPEED = 0.055;
+      const ACCEL = 0.0009;
+      const DECEL_DIST = 1.8; // inizio frenata graduale
+
+      // Stato porte
+      // 'closed', 'opening', 'open', 'closing'
+      let doorState = 'closed';
+      let doorProgress = 0; // 0 = chiuso, 1 = aperto
+      const DOOR_SPEED = 0.015;
+      let doorHoldTimer = 0;
+
+      // Modalità camera: 'orbit', 'cabin', 'follow'
+      let cameraMode = 'orbit';
+
+      // ===================== AUDIO ENGINE (DISABILITATO) =====================
+      function initAudio() {}
+      function startMotorSound() {}
+      function updateMotorSound() {}
+      function stopMotorSound() {}
+      function playArrivalChime() {}
+      function playClickSound() {}
+
+      // ===================== THREE.JS SCENE SETUP =====================
+      const canvas = document.getElementById('webgl-canvas');
+      const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+      const scene = new THREE.Scene();
+      // Un grigio acciaio profondo e luminoso al posto del blu scuro claustrofobico
+      scene.background = new THREE.Color(0x111625);
+      scene.fog = new THREE.FogExp2(0x111625, 0.02);
+
+      const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+
+      const controls = new THREE.OrbitControls(camera, canvas);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.maxPolarAngle = Math.PI / 2 + 0.05; // non andare sotto terra
+      controls.minDistance = 4;
+      controls.maxDistance = 25;
+
+      // ===================== ILLUMINAZIONE =====================
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.75); // Molto luminoso
+      scene.add(ambientLight);
+
+      // Luce direzionale principale (sole/illuminazione esterna forte)
+      const dirLight = new THREE.DirectionalLight(0xdbeafe, 1.6);
+      dirLight.position.set(12, 25, 10);
+      dirLight.castShadow = true;
+      dirLight.shadow.mapSize.width = 1024;
+      dirLight.shadow.mapSize.height = 1024;
+      dirLight.shadow.bias = -0.001;
+      scene.add(dirLight);
+
+      // Luce frontale aggiuntiva per illuminare la parte anteriore della cabina e le porte
+      const frontLight = new THREE.DirectionalLight(0xffffff, 0.95);
+      frontLight.position.set(0, 8, 16);
+      frontLight.target.position.set(0, 8, 0);
+      scene.add(frontLight);
+      scene.add(frontLight.target);
+
+      // Luci strutturali verticali negli angoli (neon oro caldo anziché azzurro freddo)
+      const cornerLightLeft = new THREE.PointLight(0xc59b27, 0.65, 25);
+      cornerLightLeft.position.set(-3, 8, 3);
+      scene.add(cornerLightLeft);
+
+      const cornerLightRight = new THREE.PointLight(0xc59b27, 0.65, 25);
+      cornerLightRight.position.set(3, 8, 3);
+      scene.add(cornerLightRight);
+
+      // ===================== MATERIALI CHIAVE =====================
+      const matPillars = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.8, roughness: 0.35 });
+      const matSteel = new THREE.MeshStandardMaterial({ color: 0xa1a1aa, metalness: 0.9, roughness: 0.18 });
+      const matDarkSteel = new THREE.MeshStandardMaterial({ color: 0x3f3f46, metalness: 0.85, roughness: 0.3 });
+      const matYellowLight = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xfff8e7, emissiveIntensity: 1.5 });
+      const matFloorPlates = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.85 });
+      const matGlass = new THREE.MeshStandardMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.18, metalness: 0.9, roughness: 0.05 });
+      const matMirror = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.98, roughness: 0.02 });
+      const matCopper = new THREE.MeshStandardMaterial({ color: 0xe2b865, metalness: 0.9, roughness: 0.25 });
+      const matWoodFloor = new THREE.MeshStandardMaterial({ color: 0x5a4a42, roughness: 0.65, metalness: 0.05 }); // Legno scuro parquet
+      const matHouseWall = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.95 }); // Pareti interne grigio antracite loft
+
+      // ===================== CREAZIONE MODELLO 3D =====================
+      
+      // 1. Pavimento della scena (terra)
+      const groundGeo = new THREE.PlaneGeometry(60, 60);
+      const groundMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.95 }); // Grigio cemento chiaro
+      const ground = new THREE.Mesh(groundGeo, groundMat);
+      ground.rotation.x = -Math.PI / 2;
+      ground.position.y = -2;
+      ground.receiveShadow = true;
+      scene.add(ground);
+
+      // Griglia decorativa sul terreno (oro e grigio scuro)
+      const grid = new THREE.GridHelper(60, 30, 0xc59b27, 0x2e3b4e);
+      grid.position.y = -1.98;
+      scene.add(grid);
+
+      // 2. Struttura del Vano (Shaft)
+      const shaft = new THREE.Group();
+      scene.add(shaft);
+
+      // Colonne portanti angolari (Pillars)
+      const pillarGeo = new THREE.CylinderGeometry(0.12, 0.12, TOTAL_HEIGHT + 2, 8);
+      const pillarPositions = [
+        [-2.8, -1.4], [2.8, -1.4], [-2.8, 1.8], [2.8, 1.8]
+      ];
+      pillarPositions.forEach(pos => {
+        const pillar = new THREE.Mesh(pillarGeo, matPillars);
+        pillar.position.set(pos[0], TOTAL_HEIGHT / 2 - 1, pos[1]);
+        pillar.castShadow = true;
+        pillar.receiveShadow = true;
+        shaft.add(pillar);
+      });
+
+      // Travi strutturali orizzontali ad ogni piano (Girders) per realismo meccanico
+      const girderGeoH = new THREE.BoxGeometry(5.6, 0.12, 0.12);
+      const girderGeoD = new THREE.BoxGeometry(0.12, 0.12, 3.2);
+      
+      FLOOR_HEIGHTS.forEach((height) => {
+        // Trave posteriore di collegamento
+        const girderBack = new THREE.Mesh(girderGeoH, matPillars);
+        girderBack.position.set(0, height - 1.6, -1.4);
+        shaft.add(girderBack);
+        
+        // Travi laterali di collegamento tra i pilastri
+        const girderLeft = new THREE.Mesh(girderGeoD, matPillars);
+        girderLeft.position.set(-2.8, height - 1.6, 0.2);
+        const girderRight = girderLeft.clone();
+        girderRight.position.set(2.8, height - 1.6, 0.2);
+        shaft.add(girderLeft);
+        shaft.add(girderRight);
+      });
+
+      // Guide di scorrimento della cabina (Rails)
+      const railGeo = new THREE.BoxGeometry(0.08, TOTAL_HEIGHT + 2, 0.08);
+      const railLeft = new THREE.Mesh(railGeo, matSteel);
+      railLeft.position.set(-1.6, TOTAL_HEIGHT / 2 - 1, 0);
+      const railRight = railLeft.clone();
+      railRight.position.set(1.6, TOTAL_HEIGHT / 2 - 1, 0);
+      shaft.add(railLeft);
+      shaft.add(railRight);
+
+      // --- STRUTTURA EDIFICIO / CASA (LOFT) ---
+      // Parete di fondo dell'edificio
+      const houseBackWall = new THREE.Mesh(new THREE.BoxGeometry(11.2, TOTAL_HEIGHT + 2, 0.2), matHouseWall);
+      houseBackWall.position.set(0, TOTAL_HEIGHT / 2 - 1, -2.1);
+      houseBackWall.receiveShadow = true;
+      scene.add(houseBackWall);
+
+      // Pilastri d'angolo dell'edificio (Loft Columns)
+      const columnGeo = new THREE.BoxGeometry(0.3, TOTAL_HEIGHT + 2, 0.3);
+      const colFL = new THREE.Mesh(columnGeo, matPillars);
+      colFL.position.set(-5.6, TOTAL_HEIGHT / 2 - 1, 5.0);
+      scene.add(colFL);
+      const colFR = colFL.clone();
+      colFR.position.x = 5.6;
+      scene.add(colFR);
+      const colBL = colFL.clone();
+      colBL.position.z = -2.0;
+      scene.add(colBL);
+      const colBR = colBL.clone();
+      colBR.position.x = 5.6;
+      scene.add(colBR);
+
+      // 3. Piattaforme dei Piani (Landing Floors)
+      const floorLandingGeo = new THREE.BoxGeometry(7, 0.25, 2.5);
+      const doorFrameGeo = new THREE.BoxGeometry(0.15, 3.2, 0.5);
+      const doorHeaderGeo = new THREE.BoxGeometry(3.0, 0.4, 0.15);
+
+      const landingDoorsLeft = [];
+      const landingDoorsRight = [];
+
+      FLOOR_HEIGHTS.forEach((height, idx) => {
+        // Piattaforma di piano Loft (assemblata per lasciare il foro per l'ascensore)
+        const slabL = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.25, 7.0), matWoodFloor);
+        slabL.position.set(-3.5, height - 1.725, 1.5);
+        slabL.receiveShadow = true;
+        slabL.castShadow = true;
+        shaft.add(slabL);
+
+        const slabR = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.25, 7.0), matWoodFloor);
+        slabR.position.set(3.5, height - 1.725, 1.5);
+        slabR.receiveShadow = true;
+        slabR.castShadow = true;
+        shaft.add(slabR);
+
+        const slabB = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.25, 0.6), matWoodFloor);
+        slabB.position.set(0, height - 1.725, -1.7);
+        slabB.receiveShadow = true;
+        slabB.castShadow = true;
+        shaft.add(slabB);
+
+        const slabF = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.25, 3.2), matWoodFloor);
+        slabF.position.set(0, height - 1.725, 3.4);
+        slabF.receiveShadow = true;
+        slabF.castShadow = true;
+        shaft.add(slabF);
+
+        // Ringhiera protettiva per le scale/atrio
+        const wallGeo = new THREE.BoxGeometry(11.2, 0.12, 0.12);
+        const wall = new THREE.Mesh(wallGeo, matSteel);
+        wall.position.set(0, height - 1.6, 4.9);
+        shaft.add(wall);
+
+        // Faretto a soffitto luminoso (Warm LED Spotlight)
+        const spotLight = new THREE.PointLight(0xffb74d, 0.85, 9);
+        spotLight.position.set(0, height + 1.35, 3.2);
+        spotLight.castShadow = true;
+        spotLight.shadow.bias = -0.002;
+        shaft.add(spotLight);
+
+        // Mesh faretto fisico
+        const fixture = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.12, 0.12, 0.08, 12),
+          new THREE.MeshBasicMaterial({ color: 0xffe082 })
+        );
+        fixture.position.set(0, height + 1.42, 3.2);
+        shaft.add(fixture);
+
+        // Arredamento ed Elementi Decorativi
+        if (idx === 0) {
+          // Divano al piano terra
+          const sofaGroup = new THREE.Group();
+          sofaGroup.position.set(-3.5, height - 1.6, 3.0);
+          sofaGroup.rotation.y = Math.PI / 2; // rivolto verso il corridoio dell'ascensore
+          
+          const matSofa = new THREE.MeshStandardMaterial({ color: 0x9a3412, roughness: 0.8 }); // Divano in pelle color ruggine
+          
+          const seat = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.25, 0.7), matSofa);
+          seat.position.y = 0.125;
+          seat.castShadow = true;
+          sofaGroup.add(seat);
+          
+          const back = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.55, 0.2), matSofa);
+          back.position.set(0, 0.4, -0.35);
+          back.castShadow = true;
+          sofaGroup.add(back);
+          
+          const armL = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.42, 0.7), matSofa);
+          armL.position.set(-0.8, 0.33, 0);
+          armL.castShadow = true;
+          sofaGroup.add(armL);
+          const armR = armL.clone();
+          armR.position.x = 0.8;
+          sofaGroup.add(armR);
+          
+          shaft.add(sofaGroup);
+        }
+
+        // Pianta in vaso decorativa (potted plant) su tutti i piani
+        const plantGroup = new THREE.Group();
+        plantGroup.position.set(3.5, height - 1.6, 3.8);
+
+        const pot = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.22, 0.16, 0.45, 12),
+          new THREE.MeshStandardMaterial({ color: 0x78716c, roughness: 0.9 })
+        );
+        pot.position.y = 0.225;
+        pot.castShadow = true;
+        plantGroup.add(pot);
+
+        const matLeaves = new THREE.MeshStandardMaterial({ color: 0x166534, roughness: 0.9 });
+        const leaf1 = new THREE.Mesh(new THREE.SphereGeometry(0.3, 8, 8), matLeaves);
+        leaf1.position.set(0, 0.58, 0);
+        leaf1.scale.set(1, 1.4, 1);
+        leaf1.castShadow = true;
+        plantGroup.add(leaf1);
+
+        const leaf2 = new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 8), matLeaves);
+        leaf2.position.set(0.08, 0.75, 0.08);
+        leaf2.castShadow = true;
+        plantGroup.add(leaf2);
+
+        const leaf3 = new THREE.Mesh(new THREE.SphereGeometry(0.2, 8, 8), matLeaves);
+        leaf3.position.set(-0.1, 0.7, -0.08);
+        leaf3.castShadow = true;
+        plantGroup.add(leaf3);
+
+        shaft.add(plantGroup);
+
+        // Numero del piano luminoso sopra la porta
+        const floorIndicatorLight = new THREE.Mesh(
+          new THREE.BoxGeometry(0.6, 0.3, 0.1),
+          new THREE.MeshBasicMaterial({ color: 0xc59b27 })
+        );
+        floorIndicatorLight.position.set(0, height + 1.8, 1.82);
+        shaft.add(floorIndicatorLight);
+
+        // Muro/Imbotte porte di piano (Door Frame)
+        const frameL = new THREE.Mesh(doorFrameGeo, matDarkSteel);
+        frameL.position.set(-1.42, height, 1.8);
+        const frameR = frameL.clone();
+        frameR.position.set(1.42, height, 1.8);
+        shaft.add(frameL);
+        shaft.add(frameR);
+
+        const frameTop = new THREE.Mesh(doorHeaderGeo, matDarkSteel);
+        frameTop.position.set(0, height + 1.5, 1.8);
+        shaft.add(frameTop);
+
+        // Porte del Vano (Landing Doors) - Scorrevoli a due ante
+        const doorPanelGeo = new THREE.BoxGeometry(0.65, 3.0, 0.04);
+        
+        const doorL = new THREE.Mesh(doorPanelGeo, matDarkSteel);
+        doorL.position.set(-0.33, height + 0.1, 1.81);
+        doorL.castShadow = true;
+        shaft.add(doorL);
+        landingDoorsLeft.push(doorL);
+
+        const doorR = new THREE.Mesh(doorPanelGeo, matDarkSteel);
+        doorR.position.set(0.33, height + 0.1, 1.81);
+        doorR.castShadow = true;
+        shaft.add(doorR);
+        landingDoorsRight.push(doorR);
+      });
+
+      // 4. Cabina dell'ascensore (Cabin Group)
+      const cabin = new THREE.Group();
+      scene.add(cabin);
+
+      // Pavimento della cabina (base)
+      const cabFloor = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.15, 2.8), matDarkSteel);
+      cabFloor.position.y = -1.6;
+      cabFloor.receiveShadow = true;
+      cabin.add(cabFloor);
+
+      // Tetto della cabina (roof)
+      const cabCeiling = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.15, 2.8), matDarkSteel);
+      cabCeiling.position.y = 1.6;
+      cabCeiling.castShadow = true;
+      cabin.add(cabCeiling);
+
+      // Pannello LED sul soffitto (glowing panel)
+      const ceilingLight = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.02, 1.6), matYellowLight);
+      ceilingLight.position.y = 1.51;
+      cabin.add(ceilingLight);
+
+      // Luce fisica all'interno della cabina per ombre realistiche
+      const cabinLight = new THREE.PointLight(0xfff8e7, 2.2, 7);
+      cabinLight.position.set(0, 1.1, 0);
+      cabinLight.castShadow = true;
+      cabinLight.shadow.mapSize.width = 512;
+      cabinLight.shadow.mapSize.height = 512;
+      cabinLight.shadow.bias = -0.005;
+      cabin.add(cabinLight);
+
+      // Bottoniera interna fisica (Car Operating Panel in cabina)
+      const copBox = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.8, 0.35), matDarkSteel);
+      copBox.position.set(1.3, 0, 0.6); // sul lato destro interno
+      cabin.add(copBox);
+      
+      const copPlate = new THREE.Mesh(new THREE.BoxGeometry(0.01, 1.7, 0.3), matSteel);
+      copPlate.position.set(1.331, 0, 0.6);
+      cabin.add(copPlate);
+
+      // 4 piccoli bottoni circolari per i piani (allineati verticalmente)
+      const buttonGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.02, 16);
+      buttonGeo.rotateZ(Math.PI / 2);
+      
+      const cabinButtons = [];
+      const cabinButtonLights = [];
+      
+      FLOOR_HEIGHTS.forEach((height, idx) => {
+        const btnY = -0.5 + idx * 0.35;
+        const btnMesh = new THREE.Mesh(buttonGeo, matCopper);
+        btnMesh.position.set(1.34, btnY, 0.6);
+        cabin.add(btnMesh);
+        cabinButtons.push(btnMesh);
+        
+        // Punti luce al centro dei bottoni
+        const btnLightGeo = new THREE.SphereGeometry(0.015, 8, 8);
+        const btnLightMat = new THREE.MeshBasicMaterial({ color: 0x555555 }); // inizialmente spento
+        const btnLightMesh = new THREE.Mesh(btnLightGeo, btnLightMat);
+        btnLightMesh.position.set(1.35, btnY, 0.6);
+        cabin.add(btnLightMesh);
+        cabinButtonLights.push(btnLightMesh);
+      });
+      // Inizializza il pulsante T (0) come attivo all'inizio
+      if (cabinButtonLights[0]) {
+        cabinButtonLights[0].material.color.setHex(0xe5c158);
+      }
+
+      // Pareti laterali esterne (vetro per vedere l'interno)
+      const wallSideL = new THREE.Mesh(new THREE.BoxGeometry(0.1, 3.2, 2.8), matSteel);
+      wallSideL.position.x = -1.35;
+      wallSideL.castShadow = true;
+      cabin.add(wallSideL);
+
+      const wallSideR = wallSideL.clone();
+      wallSideR.position.x = 1.35;
+      cabin.add(wallSideR);
+
+      // Parete posteriore (Acciaio lucido/Specchio)
+      const wallBack = new THREE.Mesh(new THREE.BoxGeometry(2.6, 3.2, 0.1), matMirror);
+      wallBack.position.set(0, 0, -1.35);
+      wallBack.castShadow = true;
+      cabin.add(wallBack);
+
+      // Vetri anteriori di protezione della cabina
+      const glassFrontL = new THREE.Mesh(new THREE.BoxGeometry(0.12, 3.2, 0.7), matGlass);
+      glassFrontL.position.set(-1.25, 0, 1.35);
+      cabin.add(glassFrontL);
+
+      const glassFrontR = glassFrontL.clone();
+      glassFrontR.position.set(1.25, 0, 1.35);
+      cabin.add(glassFrontR);
+
+      // Porte della Cabina (Car Doors) - Scorrevoli a due ante
+      const carDoorPanelGeo = new THREE.BoxGeometry(0.63, 2.9, 0.04);
+      const carDoorL = new THREE.Mesh(carDoorPanelGeo, matSteel);
+      carDoorL.position.set(-0.32, 0.05, 1.35);
+      carDoorL.castShadow = true;
+      cabin.add(carDoorL);
+
+      const carDoorR = new THREE.Mesh(carDoorPanelGeo, matSteel);
+      carDoorR.position.set(0.32, 0.05, 1.35);
+      carDoorR.castShadow = true;
+      cabin.add(carDoorR);
+
+      // 5. Puleggia e Gruppo Motore in cima al vano (Pulley System)
+      const pulleyGroup = new THREE.Group();
+      pulleyGroup.position.set(0, TOTAL_HEIGHT + 0.8, 0);
+      scene.add(pulleyGroup);
+
+      // Supporto puleggia (brushed frame)
+      const pulleyFrame = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.4, 4.4), matPillars);
+      pulleyFrame.position.y = 0.5;
+      pulleyGroup.add(pulleyFrame);
+
+      // Ruota puleggia (Wheel)
+      const wheelGeo = new THREE.CylinderGeometry(0.8, 0.8, 0.18, 24);
+      wheelGeo.rotateX(Math.PI / 2);
+      const pulleyWheel = new THREE.Mesh(wheelGeo, matCopper);
+      pulleyWheel.position.set(0, 0, 0);
+      pulleyWheel.castShadow = true;
+      pulleyGroup.add(pulleyWheel);
+
+      // 6. Contrappeso (Counterweight)
+      const counterweightGeo = new THREE.BoxGeometry(1.4, 2.2, 0.3);
+      const counterweight = new THREE.Mesh(counterweightGeo, matDarkSteel);
+      counterweight.position.set(0, TOTAL_HEIGHT - cabinY, -1.9); // opposto alla cabina
+      counterweight.castShadow = true;
+      scene.add(counterweight);
+
+      // Canali di scorrimento contrappeso
+      const cWeightRails = new THREE.Mesh(new THREE.BoxGeometry(0.04, TOTAL_HEIGHT + 2, 0.04), matPillars);
+      cWeightRails.position.set(-0.8, TOTAL_HEIGHT / 2 - 1, -1.9);
+      const cWeightRailsR = cWeightRails.clone();
+      cWeightRailsR.position.set(0.8, TOTAL_HEIGHT / 2 - 1, -1.9);
+      scene.add(cWeightRails);
+      scene.add(cWeightRailsR);
+
+      // 7. Funi Metalliche (Suspension Cables) - 3 Funi Parallele per Massimo Realismo
+      const materialRope = new THREE.LineBasicMaterial({ color: 0x556377 });
+      
+      const ropeFrontGeos = [new THREE.BufferGeometry(), new THREE.BufferGeometry(), new THREE.BufferGeometry()];
+      const ropeBackGeos = [new THREE.BufferGeometry(), new THREE.BufferGeometry(), new THREE.BufferGeometry()];
+      const ropeOffsets = [-0.18, 0, 0.18]; // Offsets laterali sull'asse X
+
+      ropeFrontGeos.forEach((geo) => {
+        scene.add(new THREE.Line(geo, materialRope));
+      });
+      ropeBackGeos.forEach((geo) => {
+        scene.add(new THREE.Line(geo, materialRope));
+      });
+
+      function updateCables() {
+        const backY = counterweight.position.y;
+        
+        ropeOffsets.forEach((offset, idx) => {
+          // Fune anteriore: tetto cabina -> puleggia
+          const frontPoints = [
+            new THREE.Vector3(offset, cabinY + 1.675, 0),
+            new THREE.Vector3(offset, TOTAL_HEIGHT + 0.8, 0)
+          ];
+          ropeFrontGeos[idx].setFromPoints(frontPoints);
+          
+          // Fune posteriore: contrappeso -> rinvio puleggia
+          const backPoints = [
+            new THREE.Vector3(offset, backY + 1.1, -1.9),
+            new THREE.Vector3(offset, TOTAL_HEIGHT + 0.8, -1.9),
+            new THREE.Vector3(offset, TOTAL_HEIGHT + 0.8, 0)
+          ];
+          ropeBackGeos[idx].setFromPoints(backPoints);
+        });
+      }
+
+      // ===================== LOGICA MOVIMENTO ESCENSORE =====================
+
+      function changeFloor(floorIdx) {
+        if (floorIdx === targetFloor) {
+          // Se siamo già sul piano, apriamo le porte se erano chiuse
+          if (doorState === 'closed' || doorState === 'closing') {
+            doorState = 'opening';
+            playClickSound();
+          }
+          return;
+        }
+
+        playClickSound();
+        targetFloor = floorIdx;
+        
+        // Disattiva vecchi bottoni, attiva il nuovo sulla pulsantiera 2D
+        document.querySelectorAll('.cop-btn').forEach(btn => {
+          if (parseInt(btn.dataset.floor, 10) === targetFloor) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
+
+        // Aggiorna luci pulsanti fisici nella cabina 3D
+        cabinButtonLights.forEach((light, idx) => {
+          if (idx === targetFloor) {
+            light.material.color.setHex(0xe5c158); // Attivo (Oro luminoso)
+          } else {
+            light.material.color.setHex(0x555555); // Spento
+          }
+        });
+
+        // Se le porte sono aperte, chiudile prima di muoverti
+        if (doorState === 'open' || doorState === 'opening') {
+          doorState = 'closing';
+        }
+
+        // Accendi freccia indicatore
+        const yDiff = FLOOR_HEIGHTS[targetFloor] - cabinY;
+        document.getElementById('arrow-up').classList.toggle('active', yDiff > 0);
+        document.getElementById('arrow-down').classList.toggle('active', yDiff < 0);
+        
+        startMotorSound();
+      }
+
+      // Gestione bottoni piani
+      document.querySelectorAll('.cop-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const f = parseInt(btn.dataset.floor, 10);
+          changeFloor(f);
+        });
+      });
+
+
+
+      // View Buttons Camera
+      document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          playClickSound();
+          document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          cameraMode = btn.dataset.view;
+
+          if (cameraMode === 'orbit') {
+            controls.enabled = true;
+            controls.target.set(0, cabinY, 0);
+            camera.position.set(10, cabinY + 2, 14);
+          } else if (cameraMode === 'cabin') {
+            controls.enabled = false;
+            // Posiziona camera dentro la cabina, guarda verso l'esterno/soglia
+            camera.position.set(0, cabinY + 0.3, -0.6);
+            camera.lookAt(0, cabinY, 4);
+          }
+        });
+      });
+
+      // ===================== LOOP ANIMAZIONE (TICK) =====================
+      const clock = new THREE.Clock();
+      let introTimer = 0;
+      const INTRO_DURATION = 2.0; // 2 secondi per panning d'ingresso camera
+      let arrivalShakeTimer = 0; // timer ammortizzatore cabina
+
+      function tick() {
+        const delta = clock.getDelta();
+        const targetY = FLOOR_HEIGHTS[targetFloor];
+        const yDiff = targetY - cabinY;
+
+        // --- 1. FISICA MOVIMENTO CABINA ---
+        if (doorState === 'closed') {
+          if (currentFloor !== targetFloor) {
+            // Esegui il movimento solo se la cabina è in transito verso un altro piano
+            if (Math.abs(yDiff) > 0.01) {
+              const dir = Math.sign(yDiff);
+              const dist = Math.abs(yDiff);
+              
+              // Controller proporzionale per decelerazione fluida senza overshoot
+              let speed = MAX_SPEED;
+              if (dist < 1.8) {
+                speed = MAX_SPEED * (dist / 1.8);
+                if (speed < 0.008) speed = 0.008; // velocità minima per completare la corsa
+              }
+              
+              velocity = dir * speed;
+              cabinY += velocity;
+              
+              // Se superiamo il piano a causa del frame step, blocchiamo la cabina al piano target
+              const newYDiff = targetY - cabinY;
+              if (Math.sign(yDiff) !== Math.sign(newYDiff)) {
+                cabinY = targetY;
+                velocity = 0;
+              }
+              
+              updateMotorSound(velocity);
+              
+              // Rotazione puleggia proporzionale a velocità
+              pulleyWheel.rotation.z += velocity * 0.4;
+              
+              const estimateFloor = Math.round(cabinY / 5);
+              document.getElementById('floor-indicator').textContent = FLOOR_LABELS[estimateFloor];
+            } else {
+              // Arrivo al piano stabilizzato
+              cabinY = targetY;
+              velocity = 0;
+              stopMotorSound();
+              
+              // Disattiva frecce COP
+              document.getElementById('arrow-up').classList.remove('active');
+              document.getElementById('arrow-down').classList.remove('active');
+              
+              // Chime arrivo e apertura porte
+              playArrivalChime();
+              doorState = 'opening';
+              currentFloor = targetFloor;
+              document.getElementById('floor-indicator').textContent = FLOOR_LABELS[currentFloor];
+
+              // Attiva micro-rimbalzo ammortizzante sui cavi ad arrivo completato
+              arrivalShakeTimer = 0.5;
+            }
+          }
+        }
+
+        // Aggiorna contrappeso (opposto)
+        counterweight.position.y = TOTAL_HEIGHT - cabinY - 1.0;
+
+        // Aggiorna posizione della cabina (Mesh 3D) con micro-rimbalzo ammortizzante
+        let shakeOffset = 0;
+        if (arrivalShakeTimer > 0) {
+          arrivalShakeTimer -= delta;
+          // Oscillazione sinusoidale smorzata (molla/cavi elasticità)
+          shakeOffset = Math.sin((0.5 - arrivalShakeTimer) * Math.PI * 18) * 0.04 * (arrivalShakeTimer / 0.5);
+        }
+        cabin.position.y = cabinY + shakeOffset;
+
+        // Aggiorna funi
+        updateCables();
+
+        // --- 2. GESTIONE ANIMAZIONE APERTURA PORTE ---
+        const activeLandingDoorL = landingDoorsLeft[targetFloor];
+        const activeLandingDoorR = landingDoorsRight[targetFloor];
+
+        if (doorState === 'opening') {
+          document.getElementById('door-status').textContent = "In Apertura";
+          document.getElementById('door-status').style.color = "var(--accent-bright)";
+          doorProgress += DOOR_SPEED;
+          if (doorProgress >= 1) {
+            doorProgress = 1;
+            doorState = 'open';
+            doorHoldTimer = 3.0; // rimani aperto per 3 sec
+          }
+        } else if (doorState === 'open') {
+          document.getElementById('door-status').textContent = "Aperto";
+          document.getElementById('door-status').style.color = "#10b981"; // Verde smeraldo
+          doorHoldTimer -= delta;
+          if (doorHoldTimer <= 0) {
+            doorState = 'closing';
+          }
+        } else if (doorState === 'closing') {
+          document.getElementById('door-status').textContent = "In Chiusura";
+          document.getElementById('door-status').style.color = "#f59e0b"; // Arancione
+          doorProgress -= DOOR_SPEED;
+          if (doorProgress <= 0) {
+            doorProgress = 0;
+            doorState = 'closed';
+          }
+        } else {
+          document.getElementById('door-status').textContent = "Chiuso";
+          document.getElementById('door-status').style.color = "#94a3b8";
+        }
+
+        // Muovi fisicamente i pannelli delle ante
+        // Anta sinistra si ritrae verso sinistra (-x)
+        // Anta destra si ritrae verso destra (+x)
+        const cabDoorOffset = doorProgress * 0.63; // corsa massima anta
+        carDoorL.position.x = -0.32 - cabDoorOffset;
+        carDoorR.position.x = 0.32 + cabDoorOffset;
+
+        if (activeLandingDoorL && activeLandingDoorR) {
+          const landDoorOffset = doorProgress * 0.63;
+          activeLandingDoorL.position.x = -0.33 - landDoorOffset;
+          activeLandingDoorR.position.x = 0.33 + landDoorOffset;
+        }
+
+        // --- 3. CAM CONTROL MODES ---
+        if (cameraMode === 'cabin') {
+          camera.position.y = cabinY + 0.35;
+          // mantiene lo sguardo fisso verso l'esterno
+        } else {
+          // Camera Libera (con animazione d'ingresso cinematografica iniziale)
+          if (introTimer < INTRO_DURATION) {
+            introTimer += delta;
+            const t = Math.min(1, introTimer / INTRO_DURATION);
+            
+            // Easing cubico (in-out)
+            const ease = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            
+            const startPos = new THREE.Vector3(18, 14, 20); // Vista panoramica d'angolo alta
+            const targetPos = new THREE.Vector3(9, 7.5, 11); // Target finale desktop
+            if (window.innerWidth < 768) {
+              targetPos.set(12, 9, 14); // Target finale mobile
+            }
+            
+            camera.position.lerpVectors(startPos, targetPos, ease);
+            
+            const startTar = new THREE.Vector3(0, 7.5, 0);
+            const targetTar = new THREE.Vector3(0, 4.2, 0);
+            controls.target.lerpVectors(startTar, targetTar, ease);
+          }
+          controls.update();
+        }
+
+        renderer.render(scene, camera);
+        requestAnimationFrame(tick);
+      }
+
+      function adjustCameraForViewport() {
+        const aspect = window.innerWidth / window.innerHeight;
+        if (aspect < 1) {
+          // Orientamento verticale (smartphone) - inquadratura centrata sul vano a 3 piani
+          camera.position.set(12, 9, 14);
+          controls.target.set(0, 4.2, 0); // baricentro più basso per 3 piani
+        } else {
+          // Desktop landscape
+          camera.position.set(9, 7.5, 11);
+          controls.target.set(0, 4.2, 0);
+        }
+        controls.update();
+      }
+
+      // Avvia rendering loop
+      tick();
+      adjustCameraForViewport();
+
+      // Ridimensionamento finestra responsivo
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        adjustCameraForViewport();
+      });
+
+    })();
+  </script>
+</body>
+</html>

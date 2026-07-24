@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DCN Ascensori — Installazione, manutenzione e modernizzazione</title>
+  <meta name="description" content="DCN progetta, installa e mantiene ascensori su misura per edifici residenziali, commerciali e industriali. Assistenza 24/7 in tutta Italia." />
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/home.css" />
+</head>
+<body>
+
+  <!-- Loader -->
+  <div class="page-loader" id="page-loader" aria-hidden="true">
+    <div class="loader-spinner"></div>
+  </div>
+
+  <!-- High-Performance CSS Doors Portal Background -->
+  <div id="scroll-video-container">
+    <div class="lobby-backdrop"></div>
+    <div class="css-door-panel css-door-left"></div>
+    <div class="css-door-panel css-door-right"></div>
+    <div class="overlay"></div>
+
+    <!-- Floor HUD indicator (simulates elevator motion) -->
+    <div id="elevator-floors-container" aria-hidden="true">
+      <div class="floor-slide" data-floor="1">
+        <span class="floor-num">01</span>
+      </div>
+      <div class="floor-slide" data-floor="0">
+        <span class="floor-num">00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card fisse rivelate dallo scroll -->
+  <div id="fixed-cards" aria-hidden="false">
+    <div class="cards-grid">
+      <article class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-8h6v8"/><path d="M12 6v4M10 8h4"/></svg>
+        </div>
+        <h3>Installazione</h3>
+        <p>Impianti nuovi chiavi in mano: dal sopralluogo alla certificazione. Progettazione su misura per edifici residenziali, uffici e industria, anche in vani ridotti.</p>
+      </article>
+      <article class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <h3>Manutenzione</h3>
+        <p>Piani di manutenzione programmata e assistenza guasti 24 ore su 24, 7 giorni su 7. Tecnici certificati, ricambi originali e tempi di intervento garantiti da contratto.</p>
+      </article>
+      <article class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M21 3v6h-6"/><path d="M21 3l-9 9"/></svg>
+        </div>
+        <h3>Modernizzazione</h3>
+        <p>Diamo nuova vita agli impianti esistenti: quadri di manovra, cabine, porte e motori di ultima generazione per più sicurezza, comfort ed efficienza energetica.</p>
+      </article>
+    </div>
+  </div>
+
+  <!-- Navigazione -->
+  <header>
+    <nav class="site-nav" aria-label="Principale">
+      <div class="container">
+        <a class="brand" href="index.html" aria-label="DCN Ascensori — home">
+          <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <rect x="4" y="2" width="40" height="44" rx="6" stroke="var(--accent)" stroke-width="3"/>
+            <path d="M17 20l7-8 7 8" stroke="var(--text)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M31 28l-7 8-7-8" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          DCN <span class="brand-suffix">Ascensori</span>
+        </a>
+
+        <ul class="nav-links" id="nav-links">
+          <li><a href="index.html" aria-current="page">Home</a></li>
+          <li><a href="pages/prodotti.html">Prodotti</a></li>
+          <li><a href="pages/servizi.html">Servizi</a></li>
+          <li><a href="pages/azienda.html">Azienda</a></li>
+          <li><a href="pages/elevator-3d.html">Simulatore 3D</a></li>
+          <li><a href="pages/contatti.html">Contatti</a></li>
+        </ul>
+
+        <a href="pages/contatti.html" class="btn btn-primary btn-sm nav-cta">Richiedi preventivo</a>
+
+        <button class="nav-toggle" aria-label="Apri menu" aria-expanded="false" aria-controls="nav-links">
+          <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Contenuto -->
+  <main id="content">
+
+    <!-- Hero -->
+    <section id="hero" aria-label="Introduzione">
+      <div class="gradient-overlay"></div>
+      <div class="hero-content">
+        <p class="hero-subtitle">La nostra missione:</p>
+        <h1>
+          Muoviamo le persone,
+          <span class="underlined"><span class="line"></span><span>un piano</span></span>
+          alla volta.
+        </h1>
+        <div class="hero-ctas">
+          <div class="code-box">
+            <span class="prompt">&gt;</span>
+            <code>dcn_preventivo --rapido</code>
+          </div>
+          <a href="pages/contatti.html" class="btn btn-primary">
+            Parla con noi <span>&rarr;</span>
+          </a>
+        </div>
+      </div>
+      <div class="scroll-hint" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+      </div>
+    </section>
+
+    <!-- Spaziatore: risalita nel vano -->
+    <div style="height:120vh;" aria-hidden="true"></div>
+
+    <!-- Zona trigger card -->
+    <div id="cards-trigger" style="height:200vh;" aria-hidden="true"></div>
+
+    <!-- Spaziatore -->
+    <div style="height:80vh;" aria-hidden="true"></div>
+
+    <!-- Reveal prodotto di punta -->
+    <section id="flagship" aria-label="Prodotto di punta">
+      <div class="inner reveal-blur">
+        <span class="eyebrow">Vi presentiamo</span>
+        <h2>DCN</h2>
+        <p class="tagline">Il nostro ascensore gearless di nuova generazione: silenzioso, rigenerativo, connesso. Fino al 40% di consumi in meno.</p>
+      </div>
+    </section>
+
+    <!-- Pannelli solidi -->
+    <div class="solid-panel">
+
+      <!-- Statistiche -->
+      <section class="section" aria-label="I nostri numeri">
+        <div class="container">
+          <div class="stats-grid">
+            <div class="reveal">
+              <div class="stat-value" data-count="1200">0<span class="suffix">+</span></div>
+              <div class="stat-label">Impianti installati</div>
+            </div>
+            <div class="reveal" data-reveal-delay="1">
+              <div class="stat-value" data-count="35">0<span class="suffix">&nbsp;anni</span></div>
+              <div class="stat-label">Di esperienza</div>
+            </div>
+            <div class="reveal" data-reveal-delay="2">
+              <div class="stat-value" data-count="98">0<span class="suffix">%</span></div>
+              <div class="stat-label">Clienti soddisfatti</div>
+            </div>
+            <div class="reveal" data-reveal-delay="3">
+              <div class="stat-value" data-count="45">0<span class="suffix">&nbsp;min</span></div>
+              <div class="stat-label">Tempo medio di intervento</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Servizi -->
+      <section class="section" aria-labelledby="servizi-title">
+        <div class="container">
+          <span class="eyebrow reveal">Cosa facciamo</span>
+          <h2 class="section-title reveal" id="servizi-title">Un partner unico per tutta la vita dell'impianto</h2>
+          <p class="section-lead reveal">Dalla prima consulenza al collaudo, dalla manutenzione programmata alla modernizzazione completa.</p>
+
+          <div class="services-grid">
+            <a class="card reveal" href="pages/prodotti.html">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-8h6v8"/></svg>
+              </div>
+              <h3>Ascensori su misura</h3>
+              <p>Gamma completa: gearless, idraulici, piattaforme elevatrici e montacarichi. Cabine personalizzabili in ogni finitura.</p>
+              <span class="card-link">Scopri i prodotti
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </span>
+            </a>
+            <a class="card reveal" data-reveal-delay="1" href="pages/servizi.html">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              </div>
+              <h3>Manutenzione e assistenza</h3>
+              <p>Contratti flessibili con reperibilità 24/7, telemonitoraggio degli impianti e verifiche periodiche di legge.</p>
+              <span class="card-link">Scopri i servizi
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </span>
+            </a>
+            <a class="card reveal" data-reveal-delay="2" href="pages/servizi.html#modernizzazione">
+              <div class="card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              </div>
+              <h3>Modernizzazione</h3>
+              <p>Aggiornamento normativo e tecnologico di impianti esistenti: meno consumi, meno fermi, più valore per l'edificio.</p>
+              <span class="card-link">Come funziona
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Clienti -->
+      <section class="section" aria-label="I nostri clienti">
+        <div class="container">
+          <div class="logo-strip reveal">
+            <span>CONDOMINIA GROUP</span>
+            <span>TORRE MILANO</span>
+            <span>HOTEL AURUM</span>
+            <span>POLICLINICO EST</span>
+            <span>RETAIL PARK 21</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonianze -->
+      <section class="section" aria-labelledby="testimonianze-title" style="border-top:1px solid var(--border);">
+        <div class="container">
+          <span class="eyebrow reveal">Cosa dicono di noi</span>
+          <h2 class="section-title reveal" id="testimonianze-title">La fiducia dei nostri clienti</h2>
+          <p class="section-lead reveal">Oltre 1.200 impianti installati e un tasso di rinnovo contratti del 98%. Ecco cosa dicono chi ci ha scelto.</p>
+
+          <div class="testimonials-grid">
+            <article class="card testimonial-card reveal">
+              <div class="testimonial-stars" aria-label="5 stelle su 5">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
+              <p class="testimonial-quote">&ldquo;Abbiamo affidato a DCN l'installazione di 6 ascensori nel nostro nuovo complesso residenziale. Professionalità impeccabile, tempi rispettati e un servizio post-vendita che non ha eguali.&rdquo;</p>
+              <div class="testimonial-author">
+                <strong>Marco Bianchi</strong>
+                <span>Amministratore — Condominia Group</span>
+              </div>
+            </article>
+
+            <article class="card testimonial-card reveal" data-reveal-delay="1">
+              <div class="testimonial-stars" aria-label="5 stelle su 5">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
+              <p class="testimonial-quote">&ldquo;Dopo 20 anni il nostro ascensore aveva bisogno di una modernizzazione completa. DCN ha trasformato un impianto anni '90 in un sistema all'avanguardia, in sole tre settimane.&rdquo;</p>
+              <div class="testimonial-author">
+                <strong>Laura Conti</strong>
+                <span>Direttrice — Hotel Aurum, Milano</span>
+              </div>
+            </article>
+
+            <article class="card testimonial-card reveal" data-reveal-delay="2">
+              <div class="testimonial-stars" aria-label="5 stelle su 5">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
+              <p class="testimonial-quote">&ldquo;La reperibilità 24/7 non è solo uno slogan: quando si è bloccato l'ascensore di notte, un tecnico era qui in 30 minuti. Con il piano Full Risk dormiamo sonni tranquilli.&rdquo;</p>
+              <div class="testimonial-author">
+                <strong>Dott. Andrea Rossi</strong>
+                <span>Resp. Servizi Generali — Policlinico Est</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="section" aria-labelledby="faq-title" style="border-top:1px solid var(--border);">
+        <div class="container">
+          <span class="eyebrow reveal">Domande frequenti</span>
+          <h2 class="section-title reveal" id="faq-title">Hai delle domande? Abbiamo le risposte.</h2>
+
+          <div class="faq-list">
+            <div class="faq-item reveal">
+              <button class="faq-question" aria-expanded="false">
+                <span>Quanto costa installare un ascensore?</span>
+                <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              </button>
+              <div class="faq-answer" role="region">
+                <p>Il costo varia in base a portata, numero di fermate, finiture della cabina e complessità del vano. Per un impianto residenziale standard (4-6 fermate) i prezzi partono indicativamente da 25.000 €. Il sopralluogo e il preventivo dettagliato sono sempre gratuiti e senza impegno.</p>
+              </div>
+            </div>
+
+            <div class="faq-item reveal" data-reveal-delay="1">
+              <button class="faq-question" aria-expanded="false">
+                <span>Quanto tempo serve per installare un ascensore nuovo?</span>
+                <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              </button>
+              <div class="faq-answer" role="region">
+                <p>Per un impianto residenziale la durata media è di 3-5 settimane dalla data di inizio cantiere. Per edifici più complessi o impianti speciali (panoramici, montacarichi industriali) i tempi possono variare. In fase di preventivo indichiamo sempre la tempistica prevista.</p>
+              </div>
+            </div>
+
+            <div class="faq-item reveal" data-reveal-delay="1">
+              <button class="faq-question" aria-expanded="false">
+                <span>È possibile installare un ascensore in un edificio esistente?</span>
+                <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              </button>
+              <div class="faq-answer" role="region">
+                <p>Sì, nella maggior parte dei casi. Disponiamo di soluzioni compatte (come il DCN Domus) pensate per vani ridotti e scale strette. Il nostro team esegue un sopralluogo per verificare la fattibilità e proporre la soluzione migliore con opere murarie minime.</p>
+              </div>
+            </div>
+
+            <div class="faq-item reveal" data-reveal-delay="2">
+              <button class="faq-question" aria-expanded="false">
+                <span>Ogni quanto va fatta la manutenzione?</span>
+                <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              </button>
+              <div class="faq-answer" role="region">
+                <p>Per legge (DPR 162/99) la manutenzione deve avvenire almeno ogni 6 mesi. Con i nostri piani Comfort e Full Risk effettuiamo visite mensili programmate, più il telemonitoraggio continuo che ci consente di intervenire preventivamente prima che si verifichi un guasto.</p>
+              </div>
+            </div>
+
+            <div class="faq-item reveal" data-reveal-delay="2">
+              <button class="faq-question" aria-expanded="false">
+                <span>Cosa succede se qualcuno resta bloccato in cabina?</span>
+                <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              </button>
+              <div class="faq-answer" role="region">
+                <p>Tutti i nostri contratti includono la reperibilità 24/7 per emergenze cabina. Il tempo medio di intervento è di 45 minuti. In caso di emergenza è sufficiente chiamare il numero verde 800 123 456, attivo 24 ore su 24 compresi festivi.</p>
+              </div>
+            </div>
+
+            <div class="faq-item reveal" data-reveal-delay="3">
+              <button class="faq-question" aria-expanded="false">
+                <span>Quali detrazioni fiscali sono disponibili?</span>
+                <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              </button>
+              <div class="faq-answer" role="region">
+                <p>L'installazione e la sostituzione di ascensori rientrano tra gli interventi ammessi al Bonus Barriere Architettoniche (detrazione del 75%). Le piattaforme elevatrici per disabili possono beneficiare anche dell'IVA agevolata al 4%. Il nostro ufficio tecnico ti guida nella documentazione necessaria.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA finale -->
+      <section class="cta-band" aria-labelledby="cta-title">
+        <div class="container">
+          <h2 class="reveal" id="cta-title">Il tuo edificio merita di muoversi meglio.</h2>
+          <p class="reveal">Sopralluogo e preventivo gratuiti, senza impegno. Rispondiamo entro 24 ore lavorative.</p>
+          <div class="hero-ctas reveal">
+            <a href="pages/contatti.html" class="btn btn-primary">
+              Parla con un esperto
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <a href="pages/prodotti.html" class="btn btn-ghost">Esplora la gamma</a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <a class="brand" href="index.html">
+            <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <rect x="4" y="2" width="40" height="44" rx="6" stroke="var(--accent)" stroke-width="3"/>
+              <path d="M17 20l7-8 7 8" stroke="var(--text)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M31 28l-7 8-7-8" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            DCN <span class="brand-suffix">Ascensori</span>
+          </a>
+          <p>Progettiamo, installiamo e manteniamo sistemi di elevazione dal 1991. Sicurezza, silenziosità, design.</p>
+        </div>
+        <div>
+          <h4>Azienda</h4>
+          <ul>
+            <li><a href="pages/azienda.html">Chi siamo</a></li>
+            <li><a href="pages/prodotti.html">Prodotti</a></li>
+            <li><a href="pages/servizi.html">Servizi</a></li>
+            <li><a href="pages/elevator-3d.html">Simulatore 3D</a></li>
+            <li><a href="pages/contatti.html">Contatti</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Servizi</h4>
+          <ul>
+            <li><a href="pages/servizi.html#installazione">Installazione</a></li>
+            <li><a href="pages/servizi.html#manutenzione">Manutenzione</a></li>
+            <li><a href="pages/servizi.html#modernizzazione">Modernizzazione</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contatti</h4>
+          <ul class="footer-contact">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Via dell'Industria 42, 20090 Milano (MI)
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              +39 02 1234 5678
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg>
+              info@dcnascensori.it
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; <span id="current-year">2026</span> DCN Ascensori S.r.l. — P.IVA 01234567890</span>
+        <span>Privacy · Cookie · Certificazioni ISO 9001</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll to top -->
+  <button class="scroll-top" id="scroll-top" aria-label="Torna in cima">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
+
+  <!-- Floating WhatsApp -->
+  <a class="floating-contact" href="https://wa.me/390212345678?text=Salve%2C%20vorrei%20informazioni%20sui%20vostri%20ascensori." target="_blank" rel="noopener noreferrer" aria-label="Contattaci su WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <!-- Cookie Banner -->
+  <div class="cookie-banner" id="cookie-banner" role="dialog" aria-label="Consenso cookie">
+    <div class="cookie-text">
+      <p>Questo sito utilizza cookie tecnici e, previo consenso, cookie di profilazione per migliorare la tua esperienza. Puoi accettare tutti i cookie o personalizzare le tue preferenze.</p>
+    </div>
+    <div class="cookie-actions">
+      <button class="btn btn-ghost btn-sm" id="cookie-reject">Solo necessari</button>
+      <button class="btn btn-primary btn-sm" id="cookie-accept">Accetta tutti</button>
+    </div>
+  </div>
+
+  <script src="js/main.js" defer></script>
+  <script src="js/home.js" defer></script>
+</body>
+</html>
